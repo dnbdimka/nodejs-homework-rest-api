@@ -20,7 +20,7 @@ app.use((_, res, __) => {
   res.status(404).json({
     status: 'error',
     code: 404,
-    message: 'Use api on routes: /api/tasks',
+    message: 'Use api on routes: /api/contacts',
     data: 'Not found',
   })
 })
