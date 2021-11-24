@@ -1,4 +1,4 @@
-const Jimp = require("jimp");
+const Jimp = require('jimp')
 
 const resizeImageByJimp = async (image) => {
   await Jimp.read(image)
@@ -6,12 +6,12 @@ const resizeImageByJimp = async (image) => {
       return img
         .resize(250, 250) // resize
         .quality(60) // set JPEG quality
-        .write(image); // save
+        .write(image) // save
     })
     .then()
     .catch((err) => {
-      console.error(err);
-    });
-};
+      console.error(err)
+    })
+}
 
-module.exports = resizeImageByJimp;
+module.exports = resizeImageByJimp

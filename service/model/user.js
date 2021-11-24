@@ -1,4 +1,4 @@
-const User = require("../schemas/user.js");
+const User = require('../schemas/user.js')
 
 const updateSubscription = async (id, subscription) =>
   User.updateOne(
@@ -6,7 +6,7 @@ const updateSubscription = async (id, subscription) =>
     {
       $set: { subscription },
     }
-  );
+  )
 
 const updateAvatar = async (id, avatarURL) =>
   User.updateOne(
@@ -14,6 +14,6 @@ const updateAvatar = async (id, avatarURL) =>
     {
       $set: { avatarURL },
     }
-  );
+  )
 
-module.exports = { updateSubscription, updateAvatar };
+module.exports = { updateSubscription, updateAvatar }

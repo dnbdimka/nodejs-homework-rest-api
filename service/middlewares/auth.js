@@ -18,4 +18,4 @@ const auth = (req, res, next) => {
     next()
   })(req, res, next)
 }
-module.exports = { auth }
+module.exports = auth
