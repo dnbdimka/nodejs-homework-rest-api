@@ -3,7 +3,7 @@ const bCrypt = require('bcryptjs')
 
 const Schema = mongoose.Schema
 
-const userSchema = new Schema({
+const user = new Schema({
   username: {
     type: String,
     required: [true, 'Username is required'],
@@ -26,20 +26,17 @@ const userSchema = new Schema({
     type: String,
     default: null,
   },
-  //   owner: {
-  //     type: SchemaTypes.ObjectId,
-  //     ref: "user",
-  //   },
+  avatarURL: String,
 })
 
-userSchema.methods.setPassword = function (password) {
+user.methods.setPassword = function (password) {
   this.password = bCrypt.hashSync(password, bCrypt.genSaltSync(6))
 }
 
-userSchema.methods.validPassword = function (password) {
+user.methods.validPassword = function (password) {
   return bCrypt.compareSync(password, this.password)
 }
 
-const User = mongoose.model('user', userSchema)
+const User = mongoose.model('user', user)
 
 module.exports = User

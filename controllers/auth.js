@@ -1,11 +1,9 @@
 const service = require('../service/model/auth.js')
 const jwt = require('jsonwebtoken')
-const {
-  schemaSignUp,
-  schemaSignIn,
-  schemaUpdateSubscription,
-} = require('../service/schemasJoi/users')
+const { schemaSignUp, schemaSignIn } = require('../service/schemasJoi/users')
+
 require('dotenv').config()
+
 const secret = process.env.SECRET
 
 const register = async (req, res, next) => {
@@ -96,42 +94,8 @@ const logout = async (req, res, next) => {
   }
 }
 
-const getUser = async (req, res, next) => {
-  const { email, subscription } = req.user
-  try {
-    res.json({
-      status: 'success',
-      code: 200,
-      user: { email, subscription },
-    })
-  } catch (error) {
-    next(error)
-  }
+module.exports = {
+  register,
+  login,
+  logout,
 }
-
-const updateSubscription = async (req, res, next) => {
-  const validationResult = schemaUpdateSubscription.validate(req.body)
-
-  if (validationResult.error) {
-    return res.status(400).json({
-      status: 'error',
-      code: 400,
-      message: validationResult.error.details[0].message,
-    })
-  }
-
-  const { id, email } = req.user
-  const { subscription } = req.body
-  try {
-    await service.updateSubscription(id, subscription)
-    res.json({
-      status: 'success',
-      code: 200,
-      user: { email, subscription },
-    })
-  } catch (error) {
-    next(error)
-  }
-}
-
-module.exports = { register, login, logout, getUser, updateSubscription }
