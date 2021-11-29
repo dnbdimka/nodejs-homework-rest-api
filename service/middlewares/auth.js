@@ -4,7 +4,15 @@ const User = require('../schemas/user')
 const auth = (req, res, next) => {
   passport.authenticate('jwt', { session: false }, async (err, user) => {
     const currentUser = await User.findById(user._id)
-    const [, token] = req.headers.authorization?.split(' ')
+    if (req.headers.authorization === undefined) {
+      return res.status(401).json({
+        status: 'error',
+        code: 401,
+        message: 'No token',
+      })
+    }
+
+    const [, token] = req.headers.authorization.split(' ')
     const isValidToken = token === currentUser?.token
     if (!user || !currentUser || !isValidToken || err) {
       return res.status(401).json({
@@ -18,4 +26,5 @@ const auth = (req, res, next) => {
     next()
   })(req, res, next)
 }
+
 module.exports = auth
