@@ -1,12 +1,13 @@
 const express = require('express')
 const router = express.Router()
 const ctrlContact = require('../../controllers/contacts.js')
+const auth = require('../../service/middlewares/auth.js')
 
-router.get('/', ctrlContact.get)
+router.get('/', auth, ctrlContact.get)
 
 router.get('/:contactId', ctrlContact.getById)
 
-router.post('/', ctrlContact.create)
+router.post('/', auth, ctrlContact.create)
 
 router.put('/:contactId', ctrlContact.update)
 

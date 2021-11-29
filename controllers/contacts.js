@@ -1,3 +1,4 @@
+const jwt = require('jsonwebtoken')
 const service = require('../service/model/contacts.js')
 const {
   schemaAddNewContact,
@@ -5,13 +6,47 @@ const {
 } = require('../service/schemasJoi/contacts.js')
 
 const get = async (req, res, next) => {
+  const { page = 1, limit = 5, favorite } = req.query
+  if (
+    (isNaN(+page) && page !== undefined) ||
+    (isNaN(+limit) && limit !== undefined)
+  ) {
+    return res.status(400).json({
+      status: 400,
+      message: 'Bad request',
+    })
+  }
+  const [, token] = req.headers.authorization.split(' ')
+  const ownerId = jwt.decode(token).id
   try {
-    const results = await service.getAllContacts()
+    const result = await service.getAllContacts(
+      +page,
+      +limit,
+      favorite,
+      ownerId
+    )
+
+    const totalContacts = await service.getTotalContacts(favorite, ownerId)
+    const totalPages = Math.ceil(totalContacts / +limit)
+
+    if (+page > totalPages) {
+      return res.status(400).json({
+        status: 'error',
+        code: 400,
+        message: 'Page not found',
+      })
+    }
     res.json({
       status: 'success',
       code: 200,
       data: {
-        contacts: results,
+        contacts: result,
+        totalContacts,
+        page: +page,
+        totalPages,
+        perPage: +limit,
+        prevPage: +page <= 1 ? null : +page - 1,
+        nextPage: +page >= totalPages ? null : +page + 1,
       },
     })
   } catch (e) {
@@ -38,7 +73,6 @@ const getById = async (req, res, next) => {
       })
     }
   } catch (e) {
-    console.error(e)
     next(e)
   }
 }
@@ -56,6 +90,8 @@ const create = async (req, res, next) => {
   }
 
   const { name, email, phone, favorite } = req.body
+  const [, token] = req.headers.authorization.split(' ')
+  const ownerId = jwt.decode(token).id
 
   try {
     const result = await service.createContact({
@@ -63,6 +99,7 @@ const create = async (req, res, next) => {
       email,
       phone,
       favorite,
+      ownerId,
     })
 
     res.status(201).json({
