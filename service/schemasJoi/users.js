@@ -29,4 +29,18 @@ const schemaUpdateSubscription = Joi.object({
   subscription: Joi.any().valid('starter', 'pro', 'business').required(),
 })
 
-module.exports = { schemaSignUp, schemaSignIn, schemaUpdateSubscription }
+const schemaVerifyRetry = Joi.object({
+  email: Joi.string()
+    .pattern(
+      /^([a-z0-9_-]+\.)*[a-z0-9_-]+@[a-z0-9_-]+(\.[a-z0-9_-]+)*\.[a-z]{2,6}$/
+    )
+    .email()
+    .required(),
+})
+
+module.exports = {
+  schemaSignUp,
+  schemaSignIn,
+  schemaUpdateSubscription,
+  schemaVerifyRetry,
+}

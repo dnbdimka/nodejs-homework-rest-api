@@ -215,6 +215,7 @@ const remove = async (req, res, next) => {
       res.json({
         status: 'success',
         code: 200,
+        message: `Contact with id: ${contactId}, is deleted`,
         data: { contact: result },
       })
     } else {

@@ -1,12 +1,9 @@
 const Contact = require('../schemas/contact.js')
 
 const getTotalContacts = async (favorite, ownerId) => {
-  console.log(favorite)
   if (!!favorite === true) {
-    console.log('enter')
     return Contact.find({ ownerId, favorite: true }).count()
   }
-  console.log('not enter')
   return Contact.find({ ownerId }).count()
 }
 
